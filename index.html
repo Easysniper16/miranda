@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Miranda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep: #2a1240;
+    --bg-mid: #3d1b5c;
+    --bg-soft: #57277e;
+    --flower: #f6c445;
+    --flower-dark: #d9a52c;
+    --cream: #f7ecd9;
+    --cream-dim: rgba(247,236,217,0.72);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+  html {
+    scroll-snap-type: y mandatory;
+  }
+  body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: var(--bg-deep);
+  }
+  .screen {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Jost', sans-serif;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .screen--one {
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -8%, var(--bg-soft) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 55% at 12% 108%, #6a3494 0%, transparent 50%),
+      radial-gradient(ellipse 80% 55% at 90% 108%, var(--bg-mid) 0%, transparent 55%),
+      var(--bg-deep);
+  }
+
+  /* fine grain texture for depth */
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+
+  /* subtle vignette + spotlight */
+  .glow {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 42%),
+      radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(15,4,28,0.55) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .flowers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--cream-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.24em;
+    text-transform: lowercase;
+    opacity: 0.75;
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  .scroll-cue svg { display: block; }
+  @keyframes bob {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 8px); }
+  }
+
+  /* ---- second screen: nocturnal / neon ---- */
+  .screen--two {
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 8%, rgba(233,44,74,0.28) 0%, transparent 60%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(233,44,74,0.14) 0%, transparent 55%),
+      linear-gradient(180deg, #190a2c 0%, #100819 55%, #0c0614 100%);
+    overflow: hidden;
+  }
+  .horizon {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+      linear-gradient(rgba(233,44,74,0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(233,44,74,0.16) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 55%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 55%, transparent 100%);
+    transform: perspective(300px) rotateX(58deg);
+    transform-origin: 50% 100%;
+    bottom: 0;
+    height: 55%;
+    top: auto;
+  }
+  .moon {
+    position: absolute;
+    top: 9%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, #ffe9b0, #f6c445 45%, #d9852f 100%);
+    box-shadow: 0 0 60px 14px rgba(246,196,69,0.35), 0 0 130px 40px rgba(233,44,74,0.18);
+    z-index: 1;
+  }
+
+  main.two {
+    padding-top: 2.2rem;
+    padding-bottom: 2.2rem;
+  }
+
+  .interests {
+    display: flex;
+    gap: 1.6rem;
+    justify-content: center;
+    margin-top: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .interest {
+    flex: 1 1 190px;
+    max-width: 210px;
+    padding: 1.5rem 1.1rem 1.4rem;
+    border: 1px solid rgba(246,196,69,0.2);
+    border-radius: 3px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+  }
+  .interest svg { display: block; margin: 0 auto 0.8rem; }
+  .interest h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--cream);
+    margin: 0 0 0.5rem;
+  }
+  .interest p {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--cream-dim);
+    margin: 0;
+  }
+
+  .song-note {
+    margin-top: 1.8rem;
+    padding: 1.5rem 1.4rem;
+    border-top: 1px solid rgba(246,196,69,0.18);
+  }
+  .song-note p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--cream-dim);
+    margin: 0 0 1.1rem;
+  }
+  .song-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 0.88rem;
+    letter-spacing: 0.05em;
+    color: #190a2c;
+    background: linear-gradient(180deg, #f9da85, #e92c4a);
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 10px 24px -8px rgba(233,44,74,0.55);
+  }
+  .song-link:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -8px rgba(233,44,74,0.65); }
+  .song-link svg { display: block; }
+
+  /* ---- third screen: hero energy, arc-glow ---- */
+  .screen--three {
+    background:
+      radial-gradient(circle at 50% 42%, rgba(232,64,34,0.22) 0%, transparent 45%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(212,168,58,0.12) 0%, transparent 55%),
+      linear-gradient(180deg, #0b0c12 0%, #0d0a10 60%, #120b10 100%);
+    overflow: hidden;
+  }
+  .reactor {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130px;
+    height: 130px;
+    z-index: 1;
+  }
+  .reactor .ring {
+    fill: none;
+    stroke-linecap: round;
+  }
+  .hud-corner {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    opacity: 0.6;
+  }
+  .hud-corner.tl { top: 22px; left: 22px; }
+  .hud-corner.tr { top: 22px; right: 22px; transform: scaleX(-1); }
+  .hud-corner.bl { bottom: 22px; left: 22px; transform: scaleY(-1); }
+  .hud-corner.br { bottom: 22px; right: 22px; transform: scale(-1,-1); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 1.1rem;
+    border: 1px solid rgba(232,64,34,0.45);
+    border-radius: 999px;
+    color: #f2b26a;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    margin-bottom: 1.4rem;
+  }
+  .badge svg { display: block; }
+
+  .reactor-photo {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2;
+    border: 2px solid rgba(242,178,106,0.55);
+    box-shadow: 0 0 34px rgba(232,64,34,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+  }
+  .reactor-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .reactor-photo .placeholder {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--cream-dim);
+    text-align: center;
+  }
+
+  .collage-frame {
+    width: min(80vw, 320px);
+    aspect-ratio: 1066 / 1450;
+    border-radius: 6px;
+    border: 1px solid rgba(232,64,34,0.4);
+    box-shadow: 0 30px 80px -20px rgba(10,2,22,0.65);
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+  .collage-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .collage-frame .placeholder {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--cream-dim);
+    text-align: center;
+    padding: 1rem;
+  }
+
+  /* ---- fourth screen: farewell photo ---- */
+  .screen--four {
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 100%, var(--bg-soft) 0%, transparent 55%),
+      var(--bg-deep);
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+  .farewell-frame {
+    width: min(92vw, 460px);
+    aspect-ratio: 569 / 319;
+    border-radius: 6px;
+    border: 1px solid rgba(246,196,69,0.3);
+    box-shadow: 0 30px 80px -20px rgba(10,2,22,0.65);
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .farewell-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .farewell-frame .placeholder {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--cream-dim);
+    text-align: center;
+    padding: 1rem;
+  }
+  .screen--four p.signoff {
+    font-size: 1.15rem;
+  }
+
+  .flower {
+    position: absolute;
+    top: -8vh;
+    will-change: transform;
+    animation-name: fall, sway;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    opacity: 0.92;
+  }
+
+  .flower svg { display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25)); }
+
+  @keyframes fall {
+    from { transform: translateY(-10vh) rotate(0deg); }
+    to   { transform: translateY(112vh) rotate(360deg); }
+  }
+  @keyframes sway {
+    0%   { margin-left: 0px; }
+    50%  { margin-left: 40px; }
+    100% { margin-left: 0px; }
+  }
+
+  main {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 3.4rem 2.6rem 3.1rem;
+    max-width: 540px;
+    width: min(88vw, 540px);
+    background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
+    border: 1px solid rgba(246,196,69,0.22);
+    border-radius: 4px;
+    backdrop-filter: blur(6px);
+    box-shadow:
+      0 30px 80px -20px rgba(10,2,22,0.65),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .corner {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    opacity: 0.85;
+  }
+  .corner.tl { top: 10px; left: 10px; }
+  .corner.tr { top: 10px; right: 10px; transform: scaleX(-1); }
+  .corner.bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+  .corner.br { bottom: 10px; right: 10px; transform: scale(-1,-1); }
+
+  .kicker {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.82rem;
+    letter-spacing: 0.32em;
+    color: var(--flower);
+    margin: 0 0 0.9rem;
+    text-transform: lowercase;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(3rem, 11vw, 5rem);
+    line-height: 1;
+    margin: 0 0 1.5rem;
+    color: var(--cream);
+    text-shadow: 0 4px 30px rgba(0,0,0,0.35);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto 1.9rem;
+  }
+  .divider .line {
+    width: 46px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--flower));
+  }
+  .divider .line.right { background: linear-gradient(to left, transparent, var(--flower)); }
+
+  p.message {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 3.2vw, 1.5rem);
+    line-height: 1.6;
+    color: var(--cream-dim);
+    margin: 0 0 1.6rem;
+  }
+
+  p.signoff {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    color: var(--flower);
+    margin: 0;
+  }
+
+  @media (max-width: 480px) {
+    main { padding: 2.6rem 1.6rem 2.4rem; }
+    .corner { width: 24px; height: 24px; }
+    .interests { gap: 0.9rem; }
+    .interest { padding: 1.2rem 0.9rem 1.1rem; }
+    .moon { width: 68px; height: 68px; top: 6%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flower { animation: none; opacity: 0.5; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="glow"></div>
+
+<section class="screen screen--one">
+  <div class="flowers" id="flowers"></div>
+
+  <main>
+    <svg class="corner tl" viewBox="0 0 34 34" fill="none"><path d="M1 1 C1 14, 1 33, 1 33 M1 1 C14 1, 33 1, 33 1" stroke="#f6c445" stroke-width="1" stroke-linecap="round"/><circle cx="1" cy="1" r="2.5" fill="#f6c445"/></svg>
+    <svg class="corner tr" viewBox="0 0 34 34" fill="none"><path d="M1 1 C1 14, 1 33, 1 33 M1 1 C14 1, 33 1, 33 1" stroke="#f6c445" stroke-width="1" stroke-linecap="round"/><circle cx="1" cy="1" r="2.5" fill="#f6c445"/></svg>
+    <svg class="corner bl" viewBox="0 0 34 34" fill="none"><path d="M1 1 C1 14, 1 33, 1 33 M1 1 C14 1, 33 1, 33 1" stroke="#f6c445" stroke-width="1" stroke-linecap="round"/><circle cx="1" cy="1" r="2.5" fill="#f6c445"/></svg>
+    <svg class="corner br" viewBox="0 0 34 34" fill="none"><path d="M1 1 C1 14, 1 33, 1 33 M1 1 C14 1, 33 1, 33 1" stroke="#f6c445" stroke-width="1" stroke-linecap="round"/><circle cx="1" cy="1" r="2.5" fill="#f6c445"/></svg>
+
+    <p class="kicker">para ti</p>
+    <h1>Miranda</h1>
+    <div class="divider">
+      <span class="line"></span>
+      <svg width="14" height="14" viewBox="0 0 40 40"><g transform="translate(20,20)"><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(288)"/><circle cx="0" cy="0" r="5.5" fill="#a9611a"/></g></svg>
+      <span class="line right"></span>
+    </div>
+    <p class="message">No son flores amarillas, pero igualmente quise hacerte un detalle.</p>
+    <p class="signoff">Feliz día 🌼</p>
+  </main>
+
+  <div class="scroll-cue">
+    <span>sigue bajando</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5 L8 11 L14 5" stroke="#f6c445" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<section class="screen screen--two">
+  <div class="horizon"></div>
+  <div class="moon"></div>
+
+  <main class="two">
+    <p class="kicker" style="color:#f2a8b8;">lo que la mueve</p>
+    <h1 style="font-size:clamp(2.2rem, 7vw, 3.2rem);">sus dos mundos</h1>
+    <div class="divider">
+      <span class="line" style="background:linear-gradient(to right, transparent, #e92c4a);"></span>
+      <svg width="14" height="14" viewBox="0 0 40 40"><g transform="translate(20,20)"><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#e92c4a"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#e92c4a" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#e92c4a" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#e92c4a" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#e92c4a" transform="rotate(288)"/><circle cx="0" cy="0" r="5.5" fill="#7a1224"/></g></svg>
+      <span class="line right" style="background:linear-gradient(to left, transparent, #e92c4a);"></span>
+    </div>
+
+    <div class="interests">
+      <div class="interest">
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
+          <circle cx="23" cy="23" r="19" stroke="#f6c445" stroke-width="1.3"/>
+          <circle cx="23" cy="23" r="12.5" stroke="#f6c445" stroke-width="0.8" opacity="0.55"/>
+          <circle cx="23" cy="23" r="6.5" stroke="#f6c445" stroke-width="0.8" opacity="0.55"/>
+          <circle cx="23" cy="23" r="2.4" fill="#f6c445"/>
+        </svg>
+        <h2>noches R&B</h2>
+        <p>Para cuando suena The Weeknd y la ciudad se siente hecha de luces rojas y neón.</p>
+      </div>
+      <div class="interest">
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
+          <path d="M23 12 C19 9, 12 9, 8 11 L8 34 C12 32, 19 32, 23 35 C27 32, 34 32, 38 34 L38 11 C34 9, 27 9, 23 12 Z" stroke="#f6c445" stroke-width="1.3" stroke-linejoin="round"/>
+          <line x1="23" y1="12" x2="23" y2="35" stroke="#f6c445" stroke-width="1"/>
+          <path d="M12 15 L18 15 M12 19 L18 19 M28 15 L34 15 M28 19 L34 19" stroke="#f6c445" stroke-width="0.8" opacity="0.6" stroke-linecap="round"/>
+        </svg>
+        <h2>un libro nuevo</h2>
+        <p>Siempre con una historia entre manos, esperando el próximo capítulo en la mesita de noche.</p>
+      </div>
+    </div>
+
+    <div class="song-note">
+      <p>Y para cuando sientas que todo el mundo está en tu contra, escucha esto.</p>
+      <a class="song-link" href="https://vt.tiktok.com/ZSqGaYx9X/" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10 6-10 6Z" fill="#190a2c"/></svg>
+        Escuchar
+      </a>
+    </div>
+
+    <div class="song-note">
+      <p>Lo sentí así, aunque no fuera conmigo.</p>
+      <a class="song-link" href="https://vt.tiktok.com/ZSqGaEoCP/" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10 6-10 6Z" fill="#190a2c"/></svg>
+        Escuchar
+      </a>
+    </div>
+  </main>
+</section>
+
+<section class="screen screen--three">
+  <svg class="hud-corner tl" viewBox="0 0 46 46" fill="none"><path d="M2 2 L2 18 M2 2 L18 2" stroke="#e84022" stroke-width="1.4"/><circle cx="2" cy="2" r="2.5" fill="#e84022"/></svg>
+  <svg class="hud-corner tr" viewBox="0 0 46 46" fill="none"><path d="M2 2 L2 18 M2 2 L18 2" stroke="#e84022" stroke-width="1.4"/><circle cx="2" cy="2" r="2.5" fill="#e84022"/></svg>
+  <svg class="hud-corner bl" viewBox="0 0 46 46" fill="none"><path d="M2 2 L2 18 M2 2 L18 2" stroke="#e84022" stroke-width="1.4"/><circle cx="2" cy="2" r="2.5" fill="#e84022"/></svg>
+  <svg class="hud-corner br" viewBox="0 0 46 46" fill="none"><path d="M2 2 L2 18 M2 2 L18 2" stroke="#e84022" stroke-width="1.4"/><circle cx="2" cy="2" r="2.5" fill="#e84022"/></svg>
+
+  <svg class="reactor" viewBox="0 0 130 130" fill="none">
+    <circle class="ring" cx="65" cy="65" r="58" stroke="#e84022" stroke-width="1" opacity="0.35"/>
+    <circle class="ring" cx="65" cy="65" r="46" stroke="#f2b26a" stroke-width="1.2" opacity="0.55" stroke-dasharray="4 7"/>
+  </svg>
+
+  <!--
+    PARA LA FOTO DEL CÍRCULO (arriba):
+    1. Pon tu imagen en la misma carpeta que este archivo .html
+    2. Cambia "avatar.jpeg" de abajo por el nombre exacto de tu archivo
+  -->
+  <div class="reactor-photo">
+    <img src="avatar.jpeg" alt="" data-fallback="avatar.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%; font-size:0.62rem;">foto<br>(avatar.jpeg / avatar.jpg)</span>
+  </div>
+
+  <!--
+    PARA EL COLLAGE (foto vertical):
+    1. Pon tu imagen en la misma carpeta que este archivo .html
+    2. Cambia "collage.jpeg" de abajo por el nombre exacto de tu archivo
+  -->
+  <div class="collage-frame" style="margin-top:9rem;">
+    <img src="collage.jpeg" alt="" data-fallback="collage.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(collage.jpeg / collage.jpg)</span>
+  </div>
+</section>
+
+<!--
+  PARA LA FOTO DE DESPEDIDA:
+  1. Pon tu imagen en la misma carpeta que este archivo .html
+  2. Cambia el nombre "despedida.jpeg" de abajo por el nombre exacto de tu archivo
+  3. Borra la línea del <span class="placeholder"> (ya no la necesitas)
+-->
+<section class="screen screen--four">
+  <div class="farewell-frame">
+    <img src="despedida.jpeg" alt="" data-fallback="despedida.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(despedida.jpeg / despedida.jpg)</span>
+  </div>
+  <p class="kicker">❤️</p>
+  <p class="signoff">hasta la próxima, Miranda 🌼</p>
+</section>
+
+<script>
+  // Simple five-petal flower, drawn once, reused with variation
+  function flowerSVG(size, hue) {
+    const petal = hue;
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 40 40">
+        <g transform="translate(20,20)">
+          <ellipse cx="0" cy="-11" rx="6" ry="10" fill="${petal}"/>
+          <ellipse cx="0" cy="-11" rx="6" ry="10" fill="${petal}" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-11" rx="6" ry="10" fill="${petal}" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-11" rx="6" ry="10" fill="${petal}" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-11" rx="6" ry="10" fill="${petal}" transform="rotate(288)"/>
+          <circle cx="0" cy="0" r="5.5" fill="#a9611a"/>
+        </g>
+      </svg>`;
+  }
+
+  const container = document.getElementById('flowers');
+  const total = 26;
+  const hues = ['#f6c445', '#f7d066', '#eeb632', '#f9da85'];
+
+  for (let i = 0; i < total; i++) {
+    const size = 18 + Math.random() * 26;
+    const left = Math.random() * 100;
+    const fallDuration = 9 + Math.random() * 10;
+    const swayDuration = 2.5 + Math.random() * 2.5;
+    const delay = -(Math.random() * 18);
+    const hue = hues[Math.floor(Math.random() * hues.length)];
+
+    const el = document.createElement('div');
+    el.className = 'flower';
+    el.style.left = left + 'vw';
+    el.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
+    el.style.animationDelay = `${delay}s, ${delay}s`;
+    el.innerHTML = flowerSVG(size, hue);
+    container.appendChild(el);
+  }
+</script>
+
+</body>
+</html>
