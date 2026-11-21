@@ -257,37 +257,6 @@
   }
   .badge svg { display: block; }
 
-  .reactor-photo {
-    position: absolute;
-    top: 8%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    overflow: hidden;
-    z-index: 2;
-    border: 2px solid rgba(242,178,106,0.55);
-    box-shadow: 0 0 34px rgba(232,64,34,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
-  }
-  .reactor-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .reactor-photo .placeholder {
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.06em;
-    color: var(--cream-dim);
-    text-align: center;
-  }
-
   .collage-frame {
     width: min(80vw, 320px);
     aspect-ratio: 1066 / 1450;
@@ -565,41 +534,41 @@
   <svg class="reactor" viewBox="0 0 130 130" fill="none">
     <circle class="ring" cx="65" cy="65" r="58" stroke="#e84022" stroke-width="1" opacity="0.35"/>
     <circle class="ring" cx="65" cy="65" r="46" stroke="#f2b26a" stroke-width="1.2" opacity="0.55" stroke-dasharray="4 7"/>
+    <circle class="ring" cx="65" cy="65" r="34" stroke="#e84022" stroke-width="1.4" opacity="0.75"/>
+    <circle cx="65" cy="65" r="22" fill="url(#coreGlow)"/>
+    <polygon points="65,50 71,63 65,63 65,80 59,67 65,67" fill="#fff2d9" opacity="0.9"/>
+    <defs>
+      <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fff2d9"/>
+        <stop offset="45%" stop-color="#f2b26a"/>
+        <stop offset="100%" stop-color="#e84022"/>
+      </radialGradient>
+    </defs>
   </svg>
-
-  <!--
-    PARA LA FOTO DEL CÍRCULO (arriba):
-    1. Pon tu imagen en la misma carpeta que este archivo .html
-    2. Cambia "avatar.jpeg" de abajo por el nombre exacto de tu archivo
-  -->
-  <div class="reactor-photo">
-    <img src="avatar.jpeg" alt="" data-fallback="avatar.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
-    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%; font-size:0.62rem;">foto<br>(avatar.jpeg / avatar.jpg)</span>
-  </div>
 
   <!--
     PARA EL COLLAGE (foto vertical):
     1. Pon tu imagen en la misma carpeta que este archivo .html
-    2. Cambia "collage.jpeg" de abajo por el nombre exacto de tu archivo
+    2. Cambia "collage.jpg" de abajo por el nombre exacto de tu archivo
   -->
   <div class="collage-frame" style="margin-top:9rem;">
-    <img src="collage.jpeg" alt="" data-fallback="collage.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
-    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(collage.jpeg / collage.jpg)</span>
+    <img src="c:\Users\funte\Downloads\WhatsApp Image 2026-09-18 at 7.52.31 PM.jpeg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <span class="placeholder" style="display:flex; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(collage.jpg)</span>
   </div>
 </section>
 
 <!--
   PARA LA FOTO DE DESPEDIDA:
   1. Pon tu imagen en la misma carpeta que este archivo .html
-  2. Cambia el nombre "despedida.jpeg" de abajo por el nombre exacto de tu archivo
+  2. Cambia el nombre "despedida.jpg" de abajo por el nombre exacto de tu archivo
   3. Borra la línea del <span class="placeholder"> (ya no la necesitas)
 -->
 <section class="screen screen--four">
   <div class="farewell-frame">
-    <img src="despedida.jpeg" alt="" data-fallback="despedida.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
-    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(despedida.jpeg / despedida.jpg)</span>
+    <img src="c:\Users\funte\Downloads\WhatsApp Image 2026-09-18 at 7.52.32 PM.jpeg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <span class="placeholder" style="display:flex; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(despedida.jpg)</span>
   </div>
-  <p class="kicker">❤️</p>
+  <p class="kicker">para cerrar</p>
   <p class="signoff">hasta la próxima, Miranda 🌼</p>
 </section>
 
