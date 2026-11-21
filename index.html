@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="locked">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -257,6 +257,37 @@
   }
   .badge svg { display: block; }
 
+  .reactor-photo {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2;
+    border: 2px solid rgba(242,178,106,0.55);
+    box-shadow: 0 0 34px rgba(232,64,34,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+  }
+  .reactor-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .reactor-photo .placeholder {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--cream-dim);
+    text-align: center;
+  }
+
   .collage-frame {
     width: min(80vw, 320px);
     aspect-ratio: 1066 / 1450;
@@ -438,10 +469,144 @@
 
   @media (prefers-reduced-motion: reduce) {
     .flower { animation: none; opacity: 0.5; }
+    .scroll-cue { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ---- quinta pantalla: escríbeme ---- */
+  .screen--five {
+    flex-direction: column;
+    gap: 1.3rem;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%, var(--bg-soft) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 55% at 85% 105%, #6a3494 0%, transparent 50%),
+      var(--bg-deep);
+  }
+  .screen--five h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+    line-height: 1.05;
+    margin: 0;
+    color: var(--cream);
+    text-shadow: 0 4px 30px rgba(0,0,0,0.35);
+  }
+  .screen--five p.lead {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.15rem, 3.2vw, 1.4rem);
+    line-height: 1.55;
+    color: var(--cream-dim);
+    margin: 0;
+    max-width: 24rem;
+  }
+  .wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.98rem;
+    letter-spacing: 0.06em;
+    color: #0d2a17;
+    background: linear-gradient(180deg, #5ee08e, #25d366);
+    padding: 0.9rem 1.9rem;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 14px 34px -10px rgba(37,211,102,0.55);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .wa-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 38px -10px rgba(37,211,102,0.7); }
+  .wa-btn:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+  .wa-btn svg { display: block; }
+  @media (prefers-reduced-motion: reduce) { .wa-btn { transition: none; } }
+
+  /* ---- pantalla de entrada + música ---- */
+  html.locked, body.locked { overflow: hidden; }
+
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6rem;
+    padding: env(safe-area-inset-top, 0px) 1.5rem env(safe-area-inset-bottom, 0px);
+    text-align: center;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -8%, var(--bg-soft) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 55% at 12% 108%, #6a3494 0%, transparent 50%),
+      var(--bg-deep);
+    transition: opacity 0.9s ease, visibility 0.9s ease;
+  }
+  .intro.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+  .intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(2.2rem, 8vw, 3.4rem);
+    line-height: 1.1;
+    margin: 0;
+    color: var(--cream);
+    text-shadow: 0 4px 30px rgba(0,0,0,0.35);
+  }
+  .intro-btn {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    color: #2a1240;
+    background: linear-gradient(180deg, #f9da85, var(--flower));
+    border: 0;
+    border-radius: 999px;
+    padding: 0.85rem 2.4rem;
+    cursor: pointer;
+    box-shadow: 0 12px 30px -10px rgba(246,196,69,0.6);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .intro-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -10px rgba(246,196,69,0.75); }
+  .intro-btn:focus-visible, .music-btn:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+
+  .music-btn {
+    position: fixed;
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 900;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: var(--cream);
+    background: rgba(42,18,64,0.6);
+    border: 1px solid rgba(246,196,69,0.45);
+    border-radius: 999px;
+    padding: 0.6rem 1.05rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.3s ease, border-color 0.3s ease;
+  }
+  .music-btn[hidden] { display: none; }
+  .music-btn.off { opacity: 0.6; border-color: rgba(246,196,69,0.2); }
+  .music-btn.off .note { text-decoration: line-through; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro, .intro-btn, .music-btn { transition: none; }
   }
 </style>
 </head>
-<body>
+<body class="locked">
+
+<div class="intro" id="intro" role="dialog" aria-label="Entrada">
+  <svg width="22" height="22" viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(20,20)"><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="6" ry="10" fill="#f6c445" transform="rotate(288)"/><circle cx="0" cy="0" r="5.5" fill="#a9611a"/></g></svg>
+  <h2>Tengo algo para ti</h2>
+  <button class="intro-btn" id="openBtn" type="button">Abrir</button>
+</div>
+
+<button class="music-btn" id="musicBtn" type="button" hidden aria-label="Pausar o reanudar la música" aria-pressed="true"><span class="note">♪</span> Música</button>
 
 <div class="grain"></div>
 <div class="glow"></div>
@@ -508,8 +673,8 @@
     </div>
 
     <div class="song-note">
-      <p>Y para cuando sientas que todo el mundo está en tu contra, escucha esto.</p>
-      <a class="song-link" href="https://vt.tiktok.com/ZSqGaYx9X/" target="_blank" rel="noopener noreferrer">
+      <p>Listen.</p>
+      <a class="song-link" href="https://vt.tiktok.com/ZSqnmA7RT/" target="_blank" rel="noopener noreferrer">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10 6-10 6Z" fill="#190a2c"/></svg>
         Escuchar
       </a>
@@ -534,42 +699,57 @@
   <svg class="reactor" viewBox="0 0 130 130" fill="none">
     <circle class="ring" cx="65" cy="65" r="58" stroke="#e84022" stroke-width="1" opacity="0.35"/>
     <circle class="ring" cx="65" cy="65" r="46" stroke="#f2b26a" stroke-width="1.2" opacity="0.55" stroke-dasharray="4 7"/>
-    <circle class="ring" cx="65" cy="65" r="34" stroke="#e84022" stroke-width="1.4" opacity="0.75"/>
-    <circle cx="65" cy="65" r="22" fill="url(#coreGlow)"/>
-    <polygon points="65,50 71,63 65,63 65,80 59,67 65,67" fill="#fff2d9" opacity="0.9"/>
-    <defs>
-      <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#fff2d9"/>
-        <stop offset="45%" stop-color="#f2b26a"/>
-        <stop offset="100%" stop-color="#e84022"/>
-      </radialGradient>
-    </defs>
   </svg>
+
+  <!--
+    PARA LA FOTO DEL CÍRCULO (arriba):
+    1. Pon tu imagen en la misma carpeta que este archivo .html
+    2. Cambia "avatar.jpeg" de abajo por el nombre exacto de tu archivo
+  -->
+  <div class="reactor-photo">
+    <img src="avatar.jpeg" alt="" data-fallback="avatar.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%; font-size:0.62rem;">foto<br>(avatar.jpeg / avatar.jpg)</span>
+  </div>
 
   <!--
     PARA EL COLLAGE (foto vertical):
     1. Pon tu imagen en la misma carpeta que este archivo .html
-    2. Cambia "collage.jpg" de abajo por el nombre exacto de tu archivo
+    2. Cambia "collage.jpeg" de abajo por el nombre exacto de tu archivo
   -->
   <div class="collage-frame" style="margin-top:9rem;">
-    <img src="c:\Users\funte\Downloads\WhatsApp Image 2026-09-18 at 7.52.31 PM.jpeg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-    <span class="placeholder" style="display:flex; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(collage.jpg)</span>
+    <img src="collage.jpeg" alt="" data-fallback="collage.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(collage.jpeg / collage.jpg)</span>
   </div>
 </section>
 
 <!--
   PARA LA FOTO DE DESPEDIDA:
   1. Pon tu imagen en la misma carpeta que este archivo .html
-  2. Cambia el nombre "despedida.jpg" de abajo por el nombre exacto de tu archivo
+  2. Cambia el nombre "despedida.jpeg" de abajo por el nombre exacto de tu archivo
   3. Borra la línea del <span class="placeholder"> (ya no la necesitas)
 -->
 <section class="screen screen--four">
   <div class="farewell-frame">
-    <img src="c:\Users\funte\Downloads\WhatsApp Image 2026-09-18 at 7.52.32 PM.jpeg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-    <span class="placeholder" style="display:flex; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(despedida.jpg)</span>
+    <img src="despedida.jpeg" alt="" data-fallback="despedida.jpg" onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=this.dataset.fallback;} else {this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+    <span class="placeholder" style="display:none; align-items:center; justify-content:center; height:100%;">pon aquí tu foto<br>(despedida.jpeg / despedida.jpg)</span>
   </div>
-  <p class="kicker">para cerrar</p>
+  <p class="kicker">❤️</p>
   <p class="signoff">hasta la próxima, Miranda 🌼</p>
+
+  <div class="scroll-cue">
+    <span>una cosa más</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5 L8 11 L14 5" stroke="#f6c445" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<section class="screen screen--five">
+  <p class="kicker">tu turno</p>
+  <h2>Escríbeme</h2>
+  <p class="lead">Si quieres decirme algo, toca aquí y el mensaje llega directo a mi chat.</p>
+  <a class="wa-btn" id="waBtn" href="#" target="_blank" rel="noopener noreferrer">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 19L4 20Z" stroke="#0d2a17" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9.5c.3 2.2 2.3 4.2 4.5 4.5l1.2-1.2-1.8-1-.8.6c-.8-.4-1.5-1.1-1.9-1.9l.6-.8-1-1.8L9 9.5Z" fill="#0d2a17"/></svg>
+    Escríbeme
+  </a>
 </section>
 
 <script>
@@ -609,6 +789,164 @@
     el.innerHTML = flowerSVG(size, hue);
     container.appendChild(el);
   }
+</script>
+
+<script>
+  // ---------- Música: musica.mp3, o una melodía suave generada si no existe ----------
+  (function () {
+    const intro = document.getElementById('intro');
+    const openBtn = document.getElementById('openBtn');
+    const musicBtn = document.getElementById('musicBtn');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const AC = window.AudioContext || window.webkitAudioContext;
+
+    let ctx = null;      // AudioContext (para la melodía generada)
+    let audio = null;    // <audio> para musica.mp3
+    let mode = null;     // 'file' | 'synth'
+    let synthStarted = false;
+
+    function setUI(on) {
+      musicBtn.classList.toggle('off', !on);
+      musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+
+    // ----- melodía generada (Do mayor 7 – La menor 7 – Fa mayor 7 – Sol) -----
+    function startSynth() {
+      if (!AC) { setUI(false); return; }
+      if (!ctx) ctx = new AC();
+      mode = 'synth';
+      ctx.resume();
+      if (synthStarted) { setUI(true); return; }
+      synthStarted = true;
+
+      const master = ctx.createGain();
+      master.gain.value = 0;
+      const lp = ctx.createBiquadFilter();
+      lp.type = 'lowpass';
+      lp.frequency.value = 2200;
+      const dly = ctx.createDelay(1.0);
+      dly.delayTime.value = 0.42;
+      const fb = ctx.createGain();
+      fb.gain.value = 0.38;
+      const wet = ctx.createGain();
+      wet.gain.value = 0.35;
+      lp.connect(master);
+      lp.connect(dly); dly.connect(fb); fb.connect(dly); dly.connect(wet); wet.connect(master);
+      master.connect(ctx.destination);
+      master.gain.setTargetAtTime(0.5, ctx.currentTime, 1.2);
+
+      const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
+      const chords = [
+        [48, 55, 59, 64],   // Cmaj7
+        [45, 52, 55, 60],   // Am7
+        [41, 48, 52, 57],   // Fmaj7
+        [43, 50, 55, 59]    // G6
+      ];
+      const pattern = [0, 2, 1, 3, 2, 3, 1, 2];
+      const BEAT = 0.75;
+
+      function pad(chord, t, dur) {
+        chord.forEach((n, i) => {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'sine';
+          o.frequency.value = midi(n);
+          o.detune.value = (i - 1.5) * 4;
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.linearRampToValueAtTime(0.05, t + 1.4);
+          g.gain.linearRampToValueAtTime(0.0001, t + dur + 1.2);
+          o.connect(g); g.connect(lp);
+          o.start(t); o.stop(t + dur + 1.3);
+        });
+      }
+      function pluck(note, t) {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.value = midi(note);
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.linearRampToValueAtTime(0.11, t + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 1.7);
+        o.connect(g); g.connect(lp);
+        o.start(t); o.stop(t + 1.8);
+      }
+
+      let step = 0;
+      let next = ctx.currentTime + 0.15;
+      function tick() {
+        while (next < ctx.currentTime + 1.2) {
+          const chord = chords[Math.floor(step / 8) % chords.length];
+          const pos = step % 8;
+          if (pos === 0) pad(chord, next, BEAT * 8);
+          pluck(chord[pattern[pos]] + 12, next);
+          next += BEAT;
+          step++;
+        }
+      }
+      tick();
+      setInterval(tick, 200);
+      setUI(true);
+    }
+
+    // ----- intenta musica.mp3; si no existe, usa la melodía generada -----
+    function startMusic() {
+      audio = new Audio('musica.mp3');
+      audio.loop = true;
+      audio.volume = 0.7;
+      let fellBack = false;
+      const fallback = () => {
+        if (fellBack) return;
+        fellBack = true;
+        audio = null;
+        startSynth();
+      };
+      audio.addEventListener('error', fallback);
+      const p = audio.play();
+      if (p && typeof p.then === 'function') {
+        p.then(() => {
+          if (fellBack) return;
+          mode = 'file';
+          setUI(true);
+          if (ctx) ctx.suspend();
+        }).catch(fallback);
+      }
+    }
+
+    openBtn.addEventListener('click', () => {
+      // El AudioContext se crea dentro del toque para que iOS/Safari lo permitan
+      if (AC && !ctx) { ctx = new AC(); ctx.resume(); }
+      document.documentElement.classList.remove('locked');
+      document.body.classList.remove('locked');
+      musicBtn.hidden = false;
+      intro.classList.add('hide');
+      setTimeout(() => intro.remove(), reduceMotion ? 0 : 1000);
+      startMusic();
+    });
+
+    musicBtn.addEventListener('click', () => {
+      if (mode === 'file' && audio) {
+        if (audio.paused) { audio.play(); setUI(true); }
+        else { audio.pause(); setUI(false); }
+      } else if (mode === 'synth' && ctx) {
+        if (ctx.state === 'running') { ctx.suspend(); setUI(false); }
+        else { ctx.resume(); setUI(true); }
+      }
+    });
+
+    openBtn.focus();
+  })();
+</script>
+
+<script>
+  // ---------- Botón "Escríbeme": abre WhatsApp con el mensaje ya escrito ----------
+  // CAMBIA ESTAS DOS LÍNEAS:
+  //   WA_NUMBER: tu número con código de país, solo dígitos (ej. República Dominicana: 1809XXXXXXX)
+  //   WA_TEXT:   el mensaje que le aparece escrito a ella
+  const WA_NUMBER = '18098471588';
+  const WA_TEXT = 'Hola, te adoro 🌼';
+
+  document.getElementById('waBtn').href =
+    'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(WA_TEXT);
 </script>
 
 </body>
